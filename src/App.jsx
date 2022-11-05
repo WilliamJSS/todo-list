@@ -1,10 +1,18 @@
 import { useState } from "react";
+import { MdDelete } from 'react-icons/md'
 import "./App.css";
 
 function App() {
   const KEY_ENTER = 13;
   const KEY_ESCAPE = 27;
 
+  const initialTodos = [
+    { id: 1, title: 'Estudar React', checked: false },
+    { id: 2, title: 'Estudar Inglês', checked: true },
+    { id: 3, title: 'Tocar guitarra', checked: false },
+  ]
+
+  const [todos, setTodos] = useState(initialTodos);
   const [value, setValue] = useState('');
 
   const clear = () => setValue('');
@@ -38,7 +46,16 @@ function App() {
           value={value}
           onChange={onChange}
           onKeyDown={onKeyDown} />
-        <p>My task: {value}</p>
+        <ul className="todo-list">
+          {todos.map((todo) => (
+            <li key={todo.id.toString()}>
+              <span className="todo">{todo.title}</span>
+              <button className="remove">
+                <MdDelete size={28}></MdDelete>
+              </button>
+            </li>
+          ))}
+        </ul>
       </section>
     </section>
   );
