@@ -18,8 +18,16 @@ function App() {
   const clear = () => setValue('');
 
   const submit = () => {
-    setValue(`[SUBMIT] ${value}`)
-    // clear();
+    setTodos([
+      ...todos,
+      {
+        id: new Date().getTime(),
+        title: value,
+        checked: false
+      }
+    ])
+
+    clear();
   }
 
   const onChange = (event) => {
@@ -33,6 +41,16 @@ function App() {
     else if (event.which === KEY_ESCAPE) {
       clear();
     }
+  }
+
+  const onToggle = (todo) => {
+    setTodos(todos.map((obj) => (
+      obj.id === todo.id ? { ...obj, checked: !obj.checked } : obj
+    )));
+  }
+
+  const onRemove = (todo) => {
+    setTodos(todos.filter((obj) => obj.id !== todo.id));
   }
 
   return (
@@ -49,8 +67,13 @@ function App() {
         <ul className="todo-list">
           {todos.map((todo) => (
             <li key={todo.id.toString()}>
-              <span className="todo">{todo.title}</span>
-              <button className="remove">
+              <span
+                className={["todo", todo.checked ? "checked" : ""].join(" ")}
+                onClick={() => onToggle(todo)}
+              >
+                {todo.title}
+              </span>
+              <button className="remove" onClick={() => onRemove(todo)}>
                 <MdDelete size={28}></MdDelete>
               </button>
             </li>
