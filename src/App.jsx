@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { MdDelete } from 'react-icons/md'
-import "./App.css";
+import Input from "./components/Input"
+import TodoList from "./components/TodoList"
 
 function App() {
-  const KEY_ENTER = 13;
-  const KEY_ESCAPE = 27;
 
   const initialTodos = [
     { id: 1, title: 'Estudar React', checked: false },
@@ -13,34 +11,16 @@ function App() {
   ]
 
   const [todos, setTodos] = useState(initialTodos);
-  const [value, setValue] = useState('');
 
-  const clear = () => setValue('');
-
-  const submit = () => {
+  const onSubmit = (newTodo) => {
     setTodos([
       ...todos,
       {
         id: new Date().getTime(),
-        title: value,
+        title: newTodo,
         checked: false
       }
     ])
-
-    clear();
-  }
-
-  const onChange = (event) => {
-    setValue(event.target.value)
-  }
-
-  const onKeyDown = (event) => {
-    if (event.which === KEY_ENTER) {
-      submit();
-    }
-    else if (event.which === KEY_ESCAPE) {
-      clear();
-    }
   }
 
   const onToggle = (todo) => {
@@ -59,26 +39,8 @@ function App() {
         <h1 className="title">TODO</h1>
       </header>
       <section className="main">
-        <input className="new-todo"
-          placeholder="O que precisa ser feito?"
-          value={value}
-          onChange={onChange}
-          onKeyDown={onKeyDown} />
-        <ul className="todo-list">
-          {todos.map((todo) => (
-            <li key={todo.id.toString()}>
-              <span
-                className={["todo", todo.checked ? "checked" : ""].join(" ")}
-                onClick={() => onToggle(todo)}
-              >
-                {todo.title}
-              </span>
-              <button className="remove" onClick={() => onRemove(todo)}>
-                <MdDelete size={28}></MdDelete>
-              </button>
-            </li>
-          ))}
-        </ul>
+        <Input onSubmit={onSubmit} />
+        <TodoList todos={todos} onToggle={onToggle} onRemove={onRemove} />
       </section>
     </section>
   );
